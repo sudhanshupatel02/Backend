@@ -4,8 +4,8 @@ require("dotenv").config();
 
 exports.auth = (req, res, next) => {
     try {
-        const token = req.body.token;
-        // const token = req.cookie.token 
+        const token = req.body.token;   //1Method //!token ko find out karne ke 3 trike h(1:-header, 2:-body, 3:-cookies) isme se kisi se bhi nikal sakte h
+        // const token = req.cookie.token  //2Method  
 
         if (!token) {
             return res.status(401).json({
@@ -16,7 +16,7 @@ exports.auth = (req, res, next) => {
 
         // verify the token 
         try {
-            const decode = jwt.verify(token, process.env.JWT_SECRET);
+            const decode = jwt.verify(token, process.env.JWT_SECRET);  //!decode or payload
 
             console.log(decode)
 
