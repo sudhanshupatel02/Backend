@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const fileSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: true
+    require: true,
   },
   imageUrl: {
     type: String,
@@ -13,7 +13,7 @@ const fileSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-  },
+  }
 });
 
 const File = mongoose.model("File", fileSchema);

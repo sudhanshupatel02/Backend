@@ -2,7 +2,7 @@
 
  require("dotenv").config()
  
- exportS.cloudinaryConnect = () =>{
+ exports.cloudinaryConnect = () =>{
     try{
          cloudinary.config({
             cloud_name:process.env.CLOUD_NAME,

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 require("dotenv").config()
 
 exports.connect = () => {
@@ -10,7 +11,6 @@ exports.connect = () => {
         console.log("Database Connection established")
     })
     .catch((error) => {
-        // console.error(err)
         console.log("Connection Issues with Database");
         console.error(error);
         process.exit(1);

@@ -1,5 +1,5 @@
 //app create
-const express =  require('express'); 
+const express =  require("express"); 
 const app = express();
 
 //PORT find krna h
@@ -9,21 +9,22 @@ const PORT = process.env.PORT || 3000;
 //middleware add krne h
 app.use(express.json());
 
-const fileupload = require("express-fileupload")  //!file se intrect(packeg install{packeg name:- npm i express-fileupload})
+const fileupload = require("express-fileupload"); //!file se intrect(packeg install{packeg name:- npm i express-fileupload})
 app.use(fileupload());
+
 //db se connect krna h
-const db = require("./config/database")
+const db = require("./config/database");
 db.connect();
 
 //cloud se connect krna h
-const cloudinary = require("./config/cloudinary")
+const cloudinary = require("./config/cloudinary");
 cloudinary.cloudinaryConnect();
 
 //api route mount krna h
-const Upload = require("./routes/Fileupload");
-app.use("/api/v1/upload",Upload);
+const Upload = require("./routes/FileUpload");
+app.use("api/v1/upload",Upload);
 
 //activate server
-app.listen(PORT,() => {
-    console.log(`Server Run at ${PORT}`);
+app.listen(PORT, () => {
+    console.log(`App is Running at ${PORT}`);
 })
