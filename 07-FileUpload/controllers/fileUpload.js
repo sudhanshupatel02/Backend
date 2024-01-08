@@ -29,13 +29,20 @@ exports.localFileUpload = async (req, res) =>{
 }
 
 
+
 function isFileTypeSupported(type, supportedTypes){
     return supportedTypes.includes(type);
 }
 
-async function uploadFileToCloudinary(file, folder){
+async function uploadFileToCloudinary(file, folder, quality){
     const options = {folder};
     console.log("temp file poth", file.tempFilePath);
+
+    if(quality){
+        options.quality = quality; //imageSizeReducer
+    }
+
+    options.resource_type = "auto" //importent video upload
     return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
 //image upload ka hadler
@@ -89,16 +96,6 @@ exports.imageUpload = async (req, res) =>{
 }
 
 
-function isFileTypeSupported(type, supportedTypes){
-    return supportedTypes.includes(type);
-}
-
-async function uploadFileToCloudinary(file, folder){
-    const options = {folder};
-    console.log("temp file poth", file.tempFilePath);
-    options.resource_type = "auto" //importent
-    return await cloudinary.uploader.upload(file.tempFilePath, options);
-}
 //video upload ka hadler
 exports.videoUpload = async (req, res) =>{
     try{
@@ -151,5 +148,55 @@ exports.videoUpload = async (req, res) =>{
 }
 
 
+//imageSizeReducer
 
+exports.imageSizeReducer = async (req, res) =>{
+    try{
+        //data fetch
+        const {name, tags, email} = req.body;
+        console.log(name,tags,email);
 
+        const file = req.files.imageFile;
+        console.log(file);
+
+        //validation
+        const supportedTypes = ["jpg", "jpeg", "png"];
+        const fileType = file.name.split('.')[1].toLowerCase();
+        console.log("File Type:", fileType);
+
+         //TODO: add a upper limit of 5mb for video
+        if(!isFileTypeSupported(fileType, supportedTypes)){
+            return res.status(400).json({
+                success:false,
+                message:'File format not supported',
+            })
+        }
+
+        //file format supported hai
+        console.log("Uploading to StudyNotion")
+        // TODO: Height attribute--> COMPRESS
+        const response = await uploadFileToCloudinary(file, "StudyNotion", 90);
+        console.log(response);
+
+        //db me entry save krni h
+        const fileData = await File.create({
+            name,
+            tags,
+            email,
+            imageUrl:response.secure_url,
+        })
+        
+        res.json({
+            success:true,
+            imageUrl:response.secure_url,
+            message:'Image Successfully Uploaded',
+        })
+    }
+    catch(error){
+     console.error(error);
+     res.status(400).json({
+        success:false,
+        message:'Something went wrong',
+     })
+    }
+}
