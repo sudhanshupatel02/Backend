@@ -9,7 +9,7 @@ exports.localFileUpload = async (req, res) =>{
          console.log("FILE AAGYI JEE ->",file);
 
          //create path where file need to be stared on server
-         let path = __dirname + "/files/" + Data.now() + `.${file.name.split('.')[1]}`;   //__dirname jobhi tumari curent directry hogi wah tumara {__}drshaye ga
+         let path = __dirname + "/files/" + Date.now() + `.${file.name.split('.')[1]}`;   //__dirname jobhi tumari curent directry hogi wah tumara {__}drshaye ga
          console.log("PATH->", path)
 
          //add poth to the move function
