@@ -33,7 +33,12 @@ function isFileTypeSupported(type, supportedTypes){
     return supportedTypes.includes(type);
 }
 
-a
+async function uploadFileToCloudinary(file, folder){
+    const options = {folder};
+    console.log("temp file poth", file.tempFilePath);
+    return await cloudinary.uploader.upload(file.tempFilePath, options);
+}
+
 //image upload ka hadler
 exports.imageUpload = async (req, res) =>{
     try{
@@ -46,7 +51,8 @@ exports.imageUpload = async (req, res) =>{
 
         //validation
         const supportedTypes = ["jpg", "jpeg", "png"];
-        const fileType = file.name.split('.')[1]
+        const fileType = file.name.split('.')[1].toLowerCase();
+        console.log("File Type:", fileType);
 
         if(!isFileTypeSupported(fileType, supportedTypes)){
             return res.status(400).json({
@@ -56,9 +62,30 @@ exports.imageUpload = async (req, res) =>{
         }
 
         //file format supported hai
-        
-    }catch(error){
+        console.log("Uploading to StudyNotion")
+        const response = await uploadFileToCloudinary(file, "StudyNotion");
+        console.log(response);
 
+        //db me entry save krni h
+        const fileData = await File.create({
+            name,
+            tags,
+            email,
+            imageUrl:response.secure_url,
+        })
+        
+        res.json({
+            success:true,
+            imageUrl:response.secure_url,
+            message:'Image Successfully Uploaded',
+        })
+    }
+    catch(error){
+     console.error(error);
+     res.status(400).json({
+        success:false,
+        message:'Something went wrong',
+     })
     }
 }
 

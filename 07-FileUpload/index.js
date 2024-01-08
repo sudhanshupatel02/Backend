@@ -8,9 +8,11 @@ const PORT = process.env.PORT || 3000;
 
 //middleware add krne h
 app.use(express.json());
-
 const fileupload = require("express-fileupload"); //!file se intrect(packeg install{packeg name:- npm i express-fileupload})
-app.use(fileupload());
+app.use(fileupload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
 
 //db se connect krna h
 const db = require("./config/database");
